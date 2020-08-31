@@ -17,6 +17,7 @@ Please check the project webpage (http://deepcompletion.cs.princeton.edu/) for m
 
 ## Using docker
 docker build -t deep-completion .
+docker run --gpus all --rm -it -v /home/kosuke55/DeepCompletionRelease:/root/DeepCompletionRelease deep_completion /bin/bash
 
 ## Quick Test
 1. Download realsense data in [`./data/`](./data), and unzip it there.
