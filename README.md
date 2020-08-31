@@ -16,8 +16,10 @@ Computer Vision and Pattern Recognition (CVPR2018)
 Please check the project webpage (http://deepcompletion.cs.princeton.edu/) for more details. If you have any question, please contact Yinda Zhang (yindaz guess cs dot princeton dot edu).
 
 ## Using docker
+```
 docker build -t deep-completion .
 docker run --gpus all --rm -it -v /home/kosuke55/DeepCompletionRelease:/root/DeepCompletionRelease deep_completion /bin/bash
+```
 
 ## Quick Test
 1. Download realsense data in [`./data/`](./data), and unzip it there.
