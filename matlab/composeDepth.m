@@ -1,13 +1,22 @@
-function composeDepth( depth_path, normal_path, normal_weight_path, dataset, output_path, param )
+% function composeDepth( depth_path, normal_path, normal_weight_path, dataset, output_path, param )
+function composeDepth()
 %COMPOSEDEPTH Generate complete depth from DNN estimation
 
 depth2depth_path = '../gaps/bin/x86_64/depth2depth';
+
+depth_path = '../data'
+normal_path = '../torch/result/normal_scannet_realsense_test'
+normal_weight_path = '../torch/result/bound_realsense_weight'
+dataset = 'realsense'
+output_path = '../results/realsense'
+param = [1000, 0.001, 1]
 
 switch dataset
     case 'realsense'
         if ~exist(output_path,'dir')
             mkdir(output_path);
         end
+
         test_files = dir([normal_path '/*_normal_est.h5']);
         raw_depth_path_pattern = [depth_path '/%s/%s_depth_open.png'];
         normal_path_pattern = [normal_path '/%s_%s_normal_est.h5'];
