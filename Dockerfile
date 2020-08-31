@@ -162,6 +162,7 @@ RUN luarocks install https://raw.githubusercontent.com/qassemoquab/stnbhwd/maste
 # Install Stitch for executing and rendering markdown files with code in them
 RUN cd /tmp \
  && pip install typing \
+ && pip install pypandoc \
  && wget -q https://github.com/jgm/pandoc/releases/download/1.18/pandoc-1.18-1-amd64.deb \
  && dpkg -i pandoc-1.18-1-amd64.deb \
  && git clone https://github.com/pystitch/stitch.git \
