@@ -23,10 +23,10 @@ switch dataset
         for a = 1:length(test_files)
             tmp = regexp(test_files(a).name, '_', 'split');
             fprintf('>>>>>%d/%d<<<<<<<\n', a, length(test_files));
-            
+
             input_depth_png  = sprintf(raw_depth_path_pattern, tmp{1}, tmp{2});
             input_normal_h5 = sprintf(normal_path_pattern, tmp{1}, tmp{2});
-            
+
             for b = 1:size(param,1)
                 output_depth_png = sprintf('%s/%s_%s_%d.png', output_path, tmp{1}, tmp{2}, b);
                 cmd = sprintf('%s %s %s -xres %f -yres %f -fx %f -fy %f -cx %f -cy %f -inertia_weight %f -smoothness_weight %f', ...
@@ -35,25 +35,25 @@ switch dataset
                     param(b,1), param(b,2));
                 if ~isempty(normal_path)
                     cmd = sprintf('%s -tangent_weight %f -input_normals %s', cmd, param(b,3), input_normal_h5);
-                end       
+                end
                 if ~isempty(normal_weight_path)
                     cmd = sprintf('%s -input_tangent_weight %s/%s_%s_weight.png', cmd, normal_weight_path, tmp{1}, tmp{2});
                 end
 
                 system(cmd);
             end
-            
+
         end
-    
+
     case 'scannet'
         raw_root = depth_path;
         list = '../torch/data_list/scannet_test_list_small.txt';
-        
+
         fp = fopen(list);
         tmp = textscan(fp, '%s');
         test_data_name = tmp{1};
         fclose(fp);
-        
+
         sid = cell(length(test_data_name),1);
         vidc = cell(length(test_data_name),1);
         vidd = cell(length(test_data_name),1);
@@ -63,21 +63,21 @@ switch dataset
             vidc{a} = tmp{3};
             vidd{a} = strrep(vidc{a}, '_suffix', '');
         end
-        
+
         raw_depth_path_pattern = [raw_root '/%s/depth/%s.png'];
         normal_path_pattern = [result_root normal_path '/%s_%s_normal_est.h5'];
-        
+
         if ~exist(output_path,'dir')
             mkdir(output_path);
         end
         save([output_path '/param.mat'], 'param', 'raw_root', 'normal_path', 'normal_weight_path');
-    
+
         load('scannettestcamera.mat');
         testcamera = scannettestcamera;
-        
+
         for a = 1:length(test_data_name)
             fprintf('>>>>>%d/%d<<<<<<<\n', a, length(test_data_name));
-            
+
             input_depth_png  = sprintf(raw_depth_path_pattern, sid{a}, vidd{a});
             input_normal_h5 = sprintf(normal_path_pattern, sid{a}, vidc{a});
 
@@ -89,22 +89,22 @@ switch dataset
                     param(b,1), param(b,2));
                 if ~isempty(normal_path)
                     cmd = sprintf('%s -normal_weight %f -input_normals %s', cmd, param(b,3), input_normal_h5);
-                end       
+                end
                 if ~isempty(normal_weight_path)
                     cmd = sprintf('%s -input_normal_weight %s/%s_%s_weight.png', cmd, normal_weight_path, sid{a}, vidc{a});
                 end
-                
+
                 system(cmd);
             end
         end
-        
-    
+
+
     case 'mp_render'
         raw_root = depth_path;
         list = '../torch/data_list/mp_test_list_horizontal.txt';
-        
+
         fp = fopen(list);
-        tmp = textscan(fp, '%s'); 
+        tmp = textscan(fp, '%s');
         test_data_name = tmp{1};
         fclose(fp);
 
@@ -117,23 +117,23 @@ switch dataset
             vidc{a} = tmp{3}(1:end-4);
             vidd{a} = strrep(vidc{a}, '_i', '_d');
         end
-        
+
         raw_depth_path_pattern = [raw_root '/%s/undistorted_depth_images/%s.png'];
         normal_path_pattern = [normal_path '/%s_%s_normal_est.h5'];
-        
+
         if ~exist(output_path,'dir')
             mkdir(output_path);
         end
         save([output_path '/param.mat'], 'param', 'depth_path', 'normal_path', 'normal_weight_path');
-        
+
         load('matterporttestcamera.mat');
         testcamera = testcamera;
         for a = 1:length(test_data_name)
             fprintf('>>>>>%d/%d<<<<<<<\n', a, length(test_data_name));
-            
+
             input_depth_png  = sprintf(raw_depth_path_pattern, sid{a}, vidd{a});
             input_normal_h5 = sprintf(normal_path_pattern, sid{a}, vidd{a});
-            
+
             for b = 1:size(param,1)
                 output_depth_png = sprintf('%s/%s_%s_%d.png', output_path, sid{a}, vidd{a}, b);
                 cmd = sprintf('%s %s %s -xres %f -yres %f -fx %f -fy %f -cx %f -cy %f -inertia_weight %f -smoothness_weight %f', ...
@@ -142,25 +142,17 @@ switch dataset
                     param(b,1), param(b,2));
                 if ~isempty(normal_path)
                     cmd = sprintf('%s -normal_weight %f -input_normals %s', cmd, param(b,3), input_normal_h5);
-                end       
+                end
                 if ~isempty(normal_weight_path)
                     cmd = sprintf('%s -input_normal_weight %s/%s_%s_weight.png', cmd, normal_weight_path, sid{a}, vidd{a});
                 end
-                
+
                 system(cmd);
             end
-            
-        end   
+
+        end
     otherwise
         fprintf('Unknown dataset!\n');
 end
 
-
-
-
-
-
-
-
 end
-
