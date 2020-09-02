@@ -195,22 +195,3 @@ RUN apt-get update \
 
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Set working dir
-RUN mkdir /root/notebook
-WORKDIR /root/notebook
-
-# Jupyter config
-RUN jupyter notebook --generate-config \
- && echo "\nimport os\nfrom IPython.lib import passwd\npassword = os.environ.get('JUPYTER_PASSWORD')\nif password:\n  c.NotebookApp.password = passwd(password)\n" \
-    >> ~/.jupyter/jupyter_notebook_config.py
-
-# Expose Jupyter port
-EXPOSE 8888
-
-
-# Install CuDNN with Torch bindings
-RUN luarocks install https://raw.githubusercontent.com/soumith/cudnn.torch/R5/cudnn-scm-1.rockspec
-
-
-CMD ["jupyter", "notebook", "--no-browser", "--ip=0.0.0.0"]
