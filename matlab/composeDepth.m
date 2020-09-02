@@ -25,7 +25,9 @@ switch dataset
             fprintf('>>>>>%d/%d<<<<<<<\n', a, length(test_files));
 
             input_depth_png  = sprintf(raw_depth_path_pattern, tmp{1}, tmp{2});
+            disp(input_depth_png)
             input_normal_h5 = sprintf(normal_path_pattern, tmp{1}, tmp{2});
+            disp(input_normal_h5)
 
             for b = 1:size(param,1)
                 output_depth_png = sprintf('%s/%s_%s_%d.png', output_path, tmp{1}, tmp{2}, b);

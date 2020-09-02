@@ -1,6 +1,10 @@
-function GenerateOcclusionWeight( input_dir, output_dir )
+% function GenerateOcclusionWeight( input_dir, output_dir )
+function GenerateOcclusionWeight()
 %GENERATEOCCLUSIONWEIGHT Convert the boundary estimation to occlusion
 %weight used by optimization
+input_dir = '../torch/result/bound_realsense_test_bound/'
+output_dir = '../torch/result/bound_realsense_weight/'
+
 if ~exist(output_dir, 'dir')
     mkdir(output_dir);
 end

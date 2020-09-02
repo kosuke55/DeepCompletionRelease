@@ -9,8 +9,10 @@ def generate_occusion_weight(input_dir, output_dir):
     files = list(Path(input_dir).glob('*_bound_est.png'))
 
     for i, file in enumerate(files):
+        print(file)
         bound = cv2.imread(str(file))
-        weight = ((1 - bound[:, :, 2]) ** 3 * 1000).astype(np.uint16)
+        bound = bound / float(bound.max())
+        weight = ((1 - bound[:, :, 1]) ** 3 * 1000).astype(np.uint16)
         weight_file = str(
             Path(output_dir) / file.name.replace(
                 '_bound_est.png', '_weight.png'))
