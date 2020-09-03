@@ -17,7 +17,7 @@ function config.parse(arg)
 
     -- testing
     cmd:option('-test_model', '', 'model used for testing')
-    cmd:option('-result_path', './result/', 'path to save result')
+    cmd:option('-result_path', './result', 'path to save result')
     cmd:option('-max_count', 1000000, 'max number of data to test')
 
     -- data loader

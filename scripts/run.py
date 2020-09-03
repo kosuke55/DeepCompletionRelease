@@ -1,5 +1,6 @@
 import argparse
 import os
+import os.path as osp
 import subprocess
 from pathlib import Path
 
@@ -70,8 +71,9 @@ execute('python prepare_data.py -i {} -c {} -d {} -ci {} -o {}'.format(
 ))
 
 # DeepCompletion
-execute('sudo docker run --gpus all --rm -it -v /home/kosuke55/DeepCompletionRelease:/root/dc deep_completion /bin/bash -i -c "cd /root/dc/torch; th main_test_bound_realsense.lua -test_model ../pre_train_model/bound.t7 -test_file ./data_list/realsense_list.txt -root_path ../data/realsense/"')
-execute('sudo docker run --gpus all --rm -it -v /home/kosuke55/DeepCompletionRelease:/root/dc deep_completion /bin/bash -i -c "cd /root/dc/torch; th main_test_realsense.lua -test_model ../pre_train_model/normal_scannet.t7 -test_file ./data_list/realsense_list.txt -root_path ../data/realsense/"')
+base_dir = osp.dirname(os.getcwd())
+execute('sudo docker run --gpus all --rm -it -v {}:/root/dc deep_completion /bin/bash -i -c "cd /root/dc/torch; th main_test_bound_realsense.lua -test_model ../pre_train_model/bound.t7 -test_file ./data_list/realsense_list.txt -root_path ../data/realsense/"'.format(base_dir))
+execute('sudo docker run --gpus all --rm -it -v {}:/root/dc deep_completion /bin/bash -i -c "cd /root/dc/torch; th main_test_realsense.lua -test_model ../pre_train_model/normal_scannet.t7 -test_file ./data_list/realsense_list.txt -root_path ../data/realsense/"'.format(base_dir))
 execute('python generate_occlusion_weight.py -i {}'.format(idx))
 execute('python compose_depth.py -i {:03} -o {} -iw {} -sw {} -tw {}'.format(
     idx, output_dir, inertia_weight, smmothness_weight, tangent_weight))
@@ -81,4 +83,5 @@ execute(
     'ipython -i -- create_pointcloud.py -d {} -c ../data/realsense/{:03}_color.png -ds 4000 -ci {}'.format(
         output_depth_path,
         idx,
-        output_dir / 'camera_info/{:03}_camera_info'.format(idx)))
+        output_dir /
+        'camera_info/{:03}_camera_info'.format(idx)))
